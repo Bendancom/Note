@@ -1,11 +1,15 @@
-#import "@preview/xyznote:0.4.0": *
+#import "style/style.typ": style
 
-#show: xyznote.with(
-  title: "力学",
-  author: "Bendancom",
-  abstract: "Bendacom 的力学笔记",
-  lang: "zh",
-)
+#show: doc => style(doc,"力学","Bendancom的力学笔记")
+
+= 材料力学
+
+== 拉伸、压缩与剪切
+
+== 扭转
+
+== 弯曲
+
 
 = 结构力学
 

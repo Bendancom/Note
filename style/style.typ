@@ -4,13 +4,14 @@
 
 #let en-font = "Times New Roman"
 #let zh-font = "LXGW WenKai Mono"
+#let font-size = zh(5)
 #let author = "Bendancom"
 
 #let style(doc,title,abstract) = {
   set text(
     lang: "zh",
     font: (en-font,zh-font),
-    size: zh(5)
+    size: font-size
   )
   set document(author: author,date: auto,title: title)
 
@@ -30,6 +31,11 @@
     it
     v(-1em)
     par()[#text(size: 0.0em)[#h(0.0em)]]
+
+    if it.level <= 2 {
+      counter(figure.where(kind: image)).update(0)
+      counter(figure.where(kind: table)).update(0)
+    }
   }
 
   // par
@@ -39,6 +45,7 @@
     leading: 0.8em,
     hanging-indent: 0em,
   )
+
   // enum
   set enum(
     numbering: numbly(
@@ -48,9 +55,62 @@
     ),
     indent: 1em
   )
+
   // list
   set list(
     indent: 1em
+  )
+  
+  // figure
+  show figure.where(kind: image): it => {
+    block[
+      #it.body
+      #text(weight: "bold")[
+        图
+        #counter(heading.where(level: 2)).display()
+        \-
+        #it.counter.display() #h(1em) #it.caption.body
+      ]
+    ]
+  }
+  show figure.where(kind: table): it => {
+    block[
+      #text(weight: "bold")[
+        表
+        #counter(heading.where(level: 2)).display()
+        \-
+        #it.counter.display() #h(1em) #it.caption.body
+      ]
+      #it.body
+    ]
+  }
+  show figure: set block(breakable: false)
+
+  //table
+  set table(align: center + horizon)
+  show table: set align(center)
+  
+  //grid
+  set grid(gutter: 1em)
+  show grid: set align(center)
+
+  //raw
+  show raw: set text(font: (en-font,zh-font),size: font-size)
+  show raw.where(lang:"eg"): it => {
+    block[
+      #emoji.lightbulb
+      #v(-1em)
+      #it
+    ]
+  }
+  show raw: set block(
+      fill: rgb("#89CFF0"),
+      radius: 1em,
+      stroke: none,
+      inset: 0%+1em,
+      outset: 0%,
+      height: auto,
+      width: 100%,
   )
 
   // front cover
@@ -107,8 +167,10 @@
       bottom: 2cm,
       right: 2cm,
       left: 2cm,
-    )
+    ),
+    numbering: "I",
   )
+  counter(page).update(1)
   outline()
 
   // body
@@ -119,6 +181,8 @@
       right: 2cm,
       left: 2cm,
     ),
+    numbering: "1",
   )
+  counter(page).update(1)
   doc
 }
